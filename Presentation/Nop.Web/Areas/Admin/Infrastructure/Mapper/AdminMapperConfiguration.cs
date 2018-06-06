@@ -242,6 +242,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
 
+            // Added for Task #1
+            //authors
+            CreateMap<Author, AuthorModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<AuthorModel, Author>();
+
+
             //vendors
             CreateMap<Vendor, VendorModel>()
                 .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
@@ -313,6 +320,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.NotApprovedTotalReviews, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductManufacturers, mo => mo.Ignore())
+                .ForMember(dest => dest.ProductAuthors, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductPictures, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductReviews, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSpecificationAttributes, mo => mo.Ignore())

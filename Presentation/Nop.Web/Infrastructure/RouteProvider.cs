@@ -120,6 +120,10 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ManufacturerList", "manufacturer/all/",
 				new { controller = "Catalog", action = "ManufacturerAll" });
 
+            //authors
+            routeBuilder.MapLocalizedRoute("AuthorList", "author/all/",
+                new { controller = "Catalog", action = "AuthorAll" });
+
             //vendors
             routeBuilder.MapLocalizedRoute("VendorList", "vendor/all/",
 				new { controller = "Catalog", action = "VendorAll" });

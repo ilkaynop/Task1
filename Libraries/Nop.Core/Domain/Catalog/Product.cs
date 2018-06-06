@@ -15,6 +15,7 @@ namespace Nop.Core.Domain.Catalog
     {
         private ICollection<ProductCategory> _productCategories;
         private ICollection<ProductManufacturer> _productManufacturers;
+        private ICollection<ProductAuthor> _productAuthors;
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
@@ -689,6 +690,16 @@ namespace Nop.Core.Domain.Catalog
         {
             get { return _productManufacturers ?? (_productManufacturers = new List<ProductManufacturer>()); }
             protected set { _productManufacturers = value; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the collection of ProductAuthor
+        /// </summary>
+        public virtual ICollection<ProductAuthor> ProductAuthors
+        {
+            get { return _productAuthors ?? (_productAuthors = new List<ProductAuthor>()); }
+            protected set { _productAuthors = value; }
         }
 
         /// <summary>

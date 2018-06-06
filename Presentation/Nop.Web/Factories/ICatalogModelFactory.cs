@@ -115,12 +115,29 @@ namespace Nop.Web.Factories
         /// <returns>List of manufacturer models</returns>
         List<ManufacturerModel> PrepareManufacturerAllModels();
 
+
+        /// <summary>
+        /// Prepare author all models
+        /// </summary>
+        /// <returns>List of author models</returns>
+        List<AuthorModel> PrepareAuthorAllModels();
+
+        /// <summary>
+        /// Prepare author model
+        /// </summary>
+        /// <param name="author">Author identifier</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Manufacturer model</returns>
+        AuthorModel PrepareAuthorModel(Author author, CatalogPagingFilteringModel command);
+
         /// <summary>
         /// Prepare manufacturer navigation model
         /// </summary>
         /// <param name="currentManufacturerId">Current manufacturer identifier</param>
         /// <returns>Manufacturer navigation model</returns>
         ManufacturerNavigationModel PrepareManufacturerNavigationModel(int currentManufacturerId);
+
+        AuthorNavigationModel PrepareAuthorNavigationModel(int currentAuthorId);
 
         #endregion
 

@@ -343,6 +343,11 @@ namespace Nop.Core.Domain.Catalog
         public bool Manufacturers { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Authors' field is shown
+        /// </summary>
+        public bool Authors { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
         /// </summary>
         public bool StockQuantityHistory { get; set; }

@@ -60,6 +60,16 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         public const string MANUFACTURERS_LIST_KEY = "Nop.pres.admin.manufacturers.list-{0}";
         public const string MANUFACTURERS_LIST_PATTERN_KEY = "Nop.pres.admin.manufacturers.list";
 
+
+        /// <summary>
+        /// Key for manufacturers caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
+        public const string AUTHORS_LIST_KEY = "Nop.pres.admin.authors.list-{0}";
+        public const string AUTHORS_LIST_PATTERN_KEY = "Nop.pres.admin.authors.list";
+
         /// <summary>
         /// Key for vendors caching
         /// </summary>
@@ -122,6 +132,21 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+        }
+
+
+        //authors
+        public void HandleEvent(EntityInserted<Author> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AUTHORS_LIST_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Author> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AUTHORS_LIST_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Author> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AUTHORS_LIST_PATTERN_KEY);
         }
 
         //vendors

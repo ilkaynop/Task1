@@ -124,6 +124,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerLifetimeScope();
             builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerLifetimeScope();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerLifetimeScope();
+            builder.RegisterType<AuthorService>().As<IAuthorService>().InstancePerLifetimeScope();
             builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerLifetimeScope();

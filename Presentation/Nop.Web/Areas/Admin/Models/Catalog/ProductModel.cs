@@ -42,6 +42,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             SelectedManufacturerIds = new List<int>();
             AvailableManufacturers = new List<SelectListItem>();
 
+            SelectedAuthorIds = new List<int>();
+            AvailableAuthors = new List<SelectListItem>();
+
             SelectedCategoryIds = new List<int>();
             AvailableCategories = new List<SelectListItem>();
 
@@ -385,6 +388,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Manufacturers")]
         public IList<int> SelectedManufacturerIds { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+
+        //authors
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Authors")]
+        public IList<int> SelectedAuthorIds { get; set; }
+        public IList<SelectListItem> AvailableAuthors { get; set; }
 
         //vendors
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]

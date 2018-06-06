@@ -1025,6 +1025,32 @@ namespace Nop.Services.Catalog
             return products;
         }
 
+
+
+        /// <summary>
+        /// Gets products by product attribute
+        /// </summary>
+        /// <param name="authorId">Product Author identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> GetProductsByAuthorId(int productauthorId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _productRepository.Table;
+            query = from p in query
+                    from pm in p.ProductAuthors.Where(pm => pm.AuthorId == productauthorId)
+
+                    select p;
+
+            query = query.Where(x => !x.Deleted);
+            query = query.OrderBy(x => x.Name);
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            return products;
+        }
+
+
+
         /// <summary>
         /// Gets associated products
         /// </summary>

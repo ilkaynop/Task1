@@ -163,6 +163,12 @@ namespace Nop.Web.Framework.Seo
                     currentRouteData.Values["manufacturerid"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "author":
+                    currentRouteData.Values["controller"] = "Catalog";
+                    currentRouteData.Values["action"] = "Author";
+                    currentRouteData.Values["authorid"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 case "vendor":
                     currentRouteData.Values["controller"] = "Catalog";
                     currentRouteData.Values["action"] = "Vendor";

@@ -185,6 +185,19 @@ namespace Nop.Web.Infrastructure.Cache
         public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
 
+
+        /// <summary>
+        /// Key for AuthorNavigationModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : current manufacturer id
+        /// {1} : language id
+        /// {2} : roles of the current user
+        /// {3} : current store ID
+        /// </remarks>
+        public const string AUTHOR_NAVIGATION_MODEL_KEY = "Nop.pres.author.navigation-{0}-{1}-{2}-{3}";
+        public const string AUTHOR_NAVIGATION_PATTERN_KEY = "Nop.pres.author.navigation";
+
         /// <summary>
         /// Key for VendorNavigationModel caching
         /// </summary>

@@ -28,6 +28,7 @@ namespace Nop.Web.Controllers
         private readonly IProductModelFactory _productModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IAuthorService _authorService;
         private readonly IProductService _productService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
@@ -52,6 +53,7 @@ namespace Nop.Web.Controllers
             IProductModelFactory productModelFactory,
             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
+            IAuthorService authorService,
             IProductService productService, 
             IVendorService vendorService,
             IWorkContext workContext, 
@@ -72,6 +74,7 @@ namespace Nop.Web.Controllers
             this._productModelFactory = productModelFactory;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._authorService = authorService;
             this._productService = productService;
             this._vendorService = vendorService;
             this._workContext = workContext;
@@ -183,7 +186,50 @@ namespace Nop.Web.Controllers
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
             return View(model);
         }
-        
+
+        #endregion
+
+
+        #region Authors
+
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult Author(int authorId, CatalogPagingFilteringModel command)
+        {
+            var author = _authorService.GetAuthorById(authorId);
+            if (author == null || author.Deleted)
+                return InvokeHttp404();
+
+            //Check whether the current user has a "Manage categories" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAuthors))
+                return InvokeHttp404();
+
+            //'Continue shopping' URL
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                _webHelper.GetThisPageUrl(false),
+                _storeContext.CurrentStore.Id);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                DisplayEditLink(Url.Action("Edit", "Author", new { id = author.Id, area = AreaNames.Admin }));
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), author.Id);
+
+            //model
+            var model = _catalogModelFactory.PrepareAuthorModel(author, command);
+
+            return View(model);
+        }
+
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult AuthorAll()
+        {
+            var model = _catalogModelFactory.PrepareAuthorAllModels();
+            return View(model);
+        }
+
         #endregion
 
         #region Vendors

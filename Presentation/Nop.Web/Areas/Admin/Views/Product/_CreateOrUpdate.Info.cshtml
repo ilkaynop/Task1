@@ -1790,10 +1790,10 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="@leftColumnClass">
-							<nop-label asp-for="SelectedCategoryIds" />
+                            <nop-label asp-for="SelectedCategoryIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
+                            <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
                             <script type="text/javascript">
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
@@ -1819,10 +1819,10 @@
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
                         <div class="@leftColumnClass">
-							<nop-label asp-for="SelectedManufacturerIds" />
+                            <nop-label asp-for="SelectedManufacturerIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
+                            <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
                             <script type="text/javascript">
                                 $(document).ready(function() {
                                     var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
@@ -1846,12 +1846,41 @@
                             </script>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Authors ? null : "advanced-setting")">
                         <div class="@leftColumnClass">
-							<nop-label asp-for="SelectedStoreIds" />
+                            <nop-label asp-for="SelectedAuthorIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                            <nop-select asp-for="SelectedAuthorIds" asp-items="Model.AvailableAuthors" asp-multiple="true" />
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    var authorsIdsInput = $('#@Html.IdFor(model => model.SelectedAuthorIds)').data("kendoMultiSelect");
+                                    authorsIdsInput.setOptions({
+                                        autoClose: false,
+                                        filter: "contains"
+                                    });
+
+                                    @if (Model.AvailableAuthors.Count == 0)
+                            {
+                                <text>
+                                    authorsIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: '@T("Admin.Catalog.Products.Fields.Authors.NoAuthorsAvailable")'
+                                    });
+                                    authorsIdsInput._placeholder();
+                                    authorsIdsInput._enable();
+                                    </text>
+                            }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="form-group @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
+                        <div class="@leftColumnClass">
+                            <nop-label asp-for="SelectedStoreIds" />
+                        </div>
+                        <div class="@rightColumnClass">
+                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                             <script type="text/javascript">
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
@@ -1877,11 +1906,11 @@
                     </div>
                     <div class="form-group @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                         <div class="@leftColumnClass">
-							<nop-label asp-for="VendorId" />
+                            <nop-label asp-for="VendorId" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
-							<span asp-validation-for="VendorId"></span>
+                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                            <span asp-validation-for="VendorId"></span>
                         </div>
                     </div>
                 </div>

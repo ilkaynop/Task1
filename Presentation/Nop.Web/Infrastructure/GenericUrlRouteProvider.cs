@@ -36,6 +36,9 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("Manufacturer", "{SeName}", 
                 new { controller = "Catalog", action = "Manufacturer" });
 
+            routeBuilder.MapLocalizedRoute("Author", "{SeName}",
+                new { controller = "Catalog", action = "Author" });
+
             routeBuilder.MapLocalizedRoute("Vendor", "{SeName}", 
                 new { controller = "Catalog", action = "Vendor" });
             

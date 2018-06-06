@@ -46,6 +46,8 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         IList<Product> GetProductsByIds(int[] productIds);
 
+        IPagedList<Product> GetProductsByAuthorId(int productauthorId, int pageIndex = 0, int pageSize = int.MaxValue);
+
         /// <summary>
         /// Inserts a product
         /// </summary>

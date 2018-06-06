@@ -37,6 +37,7 @@ namespace Nop.Web.Factories
         private readonly IProductModelFactory _productModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IAuthorService _authorService;
         private readonly IProductService _productService;
         private readonly IVendorService _vendorService;
         private readonly ICategoryTemplateService _categoryTemplateService;
@@ -71,6 +72,7 @@ namespace Nop.Web.Factories
         public CatalogModelFactory(IProductModelFactory productModelFactory,
             ICategoryService categoryService, 
             IManufacturerService manufacturerService,
+            IAuthorService authorService,
             IProductService productService, 
             IVendorService vendorService,
             ICategoryTemplateService categoryTemplateService,
@@ -101,6 +103,7 @@ namespace Nop.Web.Factories
             this._productModelFactory = productModelFactory;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._authorService = authorService;
             this._productService = productService;
             this._vendorService = vendorService;
             this._categoryTemplateService = categoryTemplateService;
@@ -915,6 +918,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+
+
+
+
         /// <summary>
         /// Prepare manufacturer navigation model
         /// </summary>
@@ -954,9 +961,152 @@ namespace Nop.Web.Factories
             
             return cachedModel;
         }
-        
+
         #endregion
-        
+
+        #region Authors
+
+
+
+
+        /// <summary>
+        /// Prepare manufacturer model
+        /// </summary>
+        /// <param name="author">Author identifier</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <returns>Manufacturer model</returns>
+        public virtual AuthorModel PrepareAuthorModel(Author author, CatalogPagingFilteringModel command)
+        {
+            if (author == null)
+                throw new ArgumentNullException(nameof(author));
+
+            var model = new AuthorModel
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                Description = author.Description,
+                SeName = author.GetSeName(),
+            };
+
+            //sorting
+            PrepareSortingOptions(model.PagingFilteringContext, command);
+            //view mode
+            PrepareViewModes(model.PagingFilteringContext, command);
+            //page size
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                true,
+                "6,3,9",
+                3);
+
+            //price ranges
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(null, _webHelper, _priceFormatter);
+            var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, null);
+            decimal? minPriceConverted = null;
+            decimal? maxPriceConverted = null;
+            if (selectedPriceRange != null)
+            {
+                if (selectedPriceRange.From.HasValue)
+                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+
+                if (selectedPriceRange.To.HasValue)
+                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+            }
+
+
+            //products
+            var products = _productService.GetProductsByAuthorId(author.Id, command.PageNumber - 1, command.PageSize);
+            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+
+            model.PagingFilteringContext.LoadPagedList(products);
+
+            return model;
+        }
+
+
+
+        /// <summary>
+        /// Prepare author all models
+        /// </summary>
+        /// <returns>List of author models</returns>
+        public virtual List<AuthorModel> PrepareAuthorAllModels()
+        {
+            var model = new List<AuthorModel>();
+            var authors = _authorService.GetAllAuthors();
+            foreach (var author in authors)
+            {
+                var modelMan = new AuthorModel
+                {
+                    Id = author.Id,
+                    FirstName = author.FirstName,
+                    LastName = author.LastName,
+                    Description = author.Description,
+                    SeName = author.GetSeName(),
+                };
+
+                //prepare picture model
+                var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
+
+                var picture = _pictureService.GetPictureById(author.PictureId);
+                var pictureModel = new PictureModel
+                {
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                    Title = string.Format(_localizationService.GetResource("Media.Author.ImageLinkTitleFormat"), modelMan.FirstName + " " + modelMan.LastName),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.FirstName + " " + modelMan.LastName)
+                };
+
+                modelMan.PictureModel = pictureModel;
+
+                model.Add(modelMan);
+            }
+
+            return model;
+        }
+
+
+        /// <summary>
+        /// Prepare author navigation model
+        /// </summary>
+        /// <param name="currentAuthorId">Current author identifier</param>
+        /// <returns>Manufacturer navigation model</returns>
+        public virtual AuthorNavigationModel PrepareAuthorNavigationModel(int currentAuthorId)
+        {
+            var cacheKey = string.Format(ModelCacheEventConsumer.AUTHOR_NAVIGATION_MODEL_KEY,
+                currentAuthorId,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var currentAuthor = _authorService.GetAuthorById(currentAuthorId);
+
+                var authors = _authorService.GetAllAuthors(pageSize: 2);
+                var model = new AuthorNavigationModel
+                {
+                    TotalAuthors = authors.TotalCount
+                };
+
+                foreach (var author in authors)
+                {
+                    var modelMan = new AuthorBriefInfoModel
+                    {
+                        Id = author.Id,
+                        FirstName = author.FirstName,
+                        LastName = author.LastName,
+                        SeName = author.GetSeName(),
+                        IsActive = currentAuthor != null && currentAuthor.Id == author.Id,
+                    };
+                    model.Authors.Add(modelMan);
+                }
+                return model;
+            });
+
+            return cachedModel;
+        }
+
+        #endregion
+
         #region Vendors
 
         /// <summary>

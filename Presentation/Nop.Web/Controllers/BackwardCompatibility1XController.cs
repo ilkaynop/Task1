@@ -19,6 +19,7 @@ namespace Nop.Web.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IAuthorService _authorService;
         private readonly IProductTagService _productTagService;
         private readonly INewsService _newsService;
         private readonly IBlogService _blogService;
@@ -33,7 +34,7 @@ namespace Nop.Web.Controllers
 
         public BackwardCompatibility1XController(IWebHelper webHelper,
             IProductService productService,
-            ICategoryService categoryService, IManufacturerService manufacturerService,
+            ICategoryService categoryService, IManufacturerService manufacturerService, IAuthorService authorService,
             IProductTagService productTagService, INewsService newsService,
             IBlogService blogService, ITopicService topicService,
             IForumService forumService, ICustomerService customerService)
@@ -42,6 +43,7 @@ namespace Nop.Web.Controllers
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._authorService = authorService;
             this._productTagService = productTagService;
             this._newsService = newsService;
             this._blogService = blogService;
@@ -76,6 +78,10 @@ namespace Nop.Web.Controllers
                 case "manufacturer":
                     {
                         return RedirectManufacturer(_webHelper.QueryString<string>("manufacturerid"), false);
+                    }
+                case "author":
+                    {
+                        return RedirectAuthor(_webHelper.QueryString<string>("authorid"), false);
                     }
                 case "producttag":
                     {
@@ -180,6 +186,18 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
+        }
+
+
+        public virtual IActionResult RedirectAuthor(string id, bool idIncludesSename = true)
+        {
+            //we can't use dash in MVC
+            var authorId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
+            var author = _authorService.GetAuthorById(authorId);
+            if (author == null)
+                return RedirectToRoutePermanent("HomePage");
+
+            return RedirectToRoutePermanent("Author", new { SeName = author.GetSeName() });
         }
 
         public virtual IActionResult RedirectProductTag(string id, bool idIncludesSename = true)

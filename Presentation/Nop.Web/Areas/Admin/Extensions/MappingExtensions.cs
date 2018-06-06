@@ -106,6 +106,28 @@ namespace Nop.Web.Areas.Admin.Extensions
 
         #endregion
 
+        // Added for Task #1
+        #region Author
+
+        public static AuthorModel ToModel(this Author entity)
+        {
+            return entity.MapTo<Author, AuthorModel>();
+        }
+
+        public static Author ToEntity(this AuthorModel model)
+        {
+            return model.MapTo<AuthorModel, Author>();
+        }
+
+        public static Author ToEntity(this AuthorModel model, Author destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+
+
         #region Vendor
 
         public static VendorModel ToModel(this Vendor entity)

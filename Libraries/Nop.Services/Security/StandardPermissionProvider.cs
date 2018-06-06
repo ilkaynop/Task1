@@ -15,6 +15,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
         public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
         public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
+        public static readonly PermissionRecord ManageAuthors = new PermissionRecord { Name = "Admin area. Manage Authors", SystemName = "ManageAuthors", Category = "Catalog" };
         public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
         public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = "ManageProductTags", Category = "Catalog" };
         public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = "ManageAttributes", Category = "Catalog" };
@@ -76,6 +77,7 @@ namespace Nop.Services.Security
                 ManageProducts,
                 ManageCategories,
                 ManageManufacturers,
+                ManageAuthors,
                 ManageProductReviews,
                 ManageProductTags,
                 ManageAttributes,
@@ -142,6 +144,7 @@ namespace Nop.Services.Security
                         ManageProducts,
                         ManageCategories,
                         ManageManufacturers,
+                        ManageAuthors,
                         ManageProductReviews,
                         ManageProductTags,
                         ManageAttributes,

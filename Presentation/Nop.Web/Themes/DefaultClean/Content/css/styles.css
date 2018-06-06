@@ -1553,6 +1553,7 @@ label, label + * {
 .home-page-category-grid,
 .sub-category-grid,
 .manufacturer-grid,
+.author-grid,
 .vendor-grid {
 	margin: 0 0 20px;
 }
@@ -1604,6 +1605,22 @@ label, label + * {
 }
 .manufacturer-grid .picture {
 	border: 1px solid #ddd;
+}
+
+
+
+.author-grid .title {
+    margin: 0 0 15px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.author-grid .title a:hover {
+   color: #4ab2f1;
+}
+
+.author-grid .picture {
+    border: 1px solid #ddd;
 }
 
 .vendor-grid .title {

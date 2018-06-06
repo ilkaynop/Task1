@@ -59,6 +59,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IProductTemplateService _productTemplateService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IAuthorService _authorService;
         private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -108,6 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductTemplateService productTemplateService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
+            IAuthorService authorService,
             ICustomerService customerService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
@@ -153,6 +155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._productTemplateService = productTemplateService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._authorService = authorService;
             this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
@@ -420,6 +423,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+
+        protected virtual void PrepareAuthorMappingModel(ProductModel model, Product product, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (!excludeProperties && product != null)
+                model.SelectedAuthorIds = _authorService.GetProductAuthorsByProductId(product.Id, true).Select(c => c.AuthorId).ToList();
+
+            var allAuthors = SelectListHelper.GetAuthorList(_authorService, _cacheManager, true);
+            foreach (var m in allAuthors)
+            {
+                m.Selected = model.SelectedAuthorIds.Contains(int.Parse(m.Value));
+                model.AvailableAuthors.Add(m);
+            }
+        }
+
         protected virtual void SaveManufacturerMappings(Product product, ProductModel model)
         {
             var existingProductManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id, true);
@@ -446,6 +466,31 @@ namespace Nop.Web.Areas.Admin.Controllers
                     });
                 }
         }
+
+
+
+        protected virtual void SaveAuthorMappings(Product product, ProductModel model)
+        {
+            var existingProductAuthors = _authorService.GetProductAuthorsByProductId(product.Id, true);
+
+            //delete authors
+            foreach (var existingProductAuthor in existingProductAuthors)
+                if (!model.SelectedAuthorIds.Contains(existingProductAuthor.AuthorId))
+                    _authorService.DeleteProductAuthor(existingProductAuthor);
+
+            //add authors
+            foreach (var authorId in model.SelectedAuthorIds)
+                if (existingProductAuthors.FindProductAuthor(product.Id, authorId) == null)
+                {
+                    _authorService.InsertProductAuthor(new ProductAuthor()
+                    {
+                        ProductId = product.Id,
+                        AuthorId = authorId
+                    });
+                }
+        }
+
+
 
         protected virtual void PrepareDiscountMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
@@ -1352,6 +1397,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             PrepareCategoryMappingModel(model, null, false);
             PrepareManufacturerMappingModel(model, null, false);
+            PrepareAuthorMappingModel(model, null, false);
             PrepareDiscountMappingModel(model, null, false);
 
             return View(model);
@@ -1400,6 +1446,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveCategoryMappings(product, model);
                 //manufacturers
                 SaveManufacturerMappings(product, model);
+                //authors
+                SaveAuthorMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //stores
@@ -1436,6 +1484,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareStoresMappingModel(model, null, true);
             PrepareCategoryMappingModel(model, null, true);
             PrepareManufacturerMappingModel(model, null, true);
+            PrepareAuthorMappingModel(model, null, true);
             PrepareDiscountMappingModel(model, null, true);
 
             return View(model);
@@ -1473,6 +1522,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareStoresMappingModel(model, product, false);
             PrepareCategoryMappingModel(model, product, false);
             PrepareManufacturerMappingModel(model, product, false);
+            PrepareAuthorMappingModel(model, product, false);
             PrepareDiscountMappingModel(model, product, false);
 
             return View(model);
@@ -1543,6 +1593,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SaveCategoryMappings(product, model);
                 //manufacturers
                 SaveManufacturerMappings(product, model);
+                //authors
+                SaveAuthorMappings(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //stores
@@ -1631,6 +1683,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareStoresMappingModel(model, product, true);
             PrepareCategoryMappingModel(model, product, true);
             PrepareManufacturerMappingModel(model, product, true);
+            PrepareAuthorMappingModel(model, product, true);
             PrepareDiscountMappingModel(model, product, true);
 
             return View(model);

@@ -94,6 +94,50 @@ namespace Nop.Web.Areas.Admin.Helpers
             return result;
         }
 
+
+
+        /// <summary>
+        /// Get manufacturer list
+        /// </summary>
+        /// <param name="authorService">Manufacturer service</param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturer list</returns>
+        public static List<SelectListItem> GetAuthorList(IAuthorService authorService, ICacheManager cacheManager, bool showHidden = false)
+        {
+            if (authorService == null)
+                throw new ArgumentNullException(nameof(authorService));
+
+            if (cacheManager == null)
+                throw new ArgumentNullException(nameof(cacheManager));
+
+            var cacheKey = string.Format(ModelCacheEventConsumer.AUTHORS_LIST_KEY, showHidden);
+            var listItems = cacheManager.Get(cacheKey, () =>
+            {
+                var authors = authorService.GetAllAuthors(showHidden: showHidden);
+                return authors.Select(m => new SelectListItem
+                {
+                    Text = m.FirstName + " " + m.LastName,
+                    Value = m.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+
+
         /// <summary>
         /// Get vendor list
         /// </summary>

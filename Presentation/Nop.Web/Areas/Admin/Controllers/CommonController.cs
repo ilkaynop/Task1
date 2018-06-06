@@ -434,6 +434,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                         case "manufacturer":
                             detailsUrl = Url.Action("Edit", "Manufacturer", new { id = x.EntityId });
                             break;
+                        case "author":
+                            detailsUrl = Url.Action("Edit", "Author", new { id = x.EntityId });
+                            break;
                         case "product":
                             detailsUrl = Url.Action("Edit", "Product", new { id = x.EntityId });
                             break;
