@@ -355,6 +355,20 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID = "Nop.pres.product.manufacturers-{0}-";
 
+
+        /// <summary>
+        /// Key for ProductAuthors model caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : language id
+        /// {2} : roles of the current user
+        /// {3} : current store ID
+        /// </remarks>
+        public const string PRODUCT_AUTHORS_MODEL_KEY = "Nop.pres.product.authors-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_AUTHORS_PATTERN_KEY = "Nop.pres.product.authors";
+        public const string PRODUCT_AUTHORS_PATTERN_KEY_BY_ID = "Nop.pres.product.authors-{0}-";
+
         /// <summary>
         /// Key for ProductSpecificationModel caching
         /// </summary>

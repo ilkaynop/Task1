@@ -42,6 +42,7 @@ namespace Nop.Web.Factories
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IAuthorService _authorService;
         private readonly IProductService _productService;
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
@@ -80,6 +81,7 @@ namespace Nop.Web.Factories
         public ProductModelFactory(ISpecificationAttributeService specificationAttributeService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
+            IAuthorService authorService,
             IProductService productService,
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
@@ -114,6 +116,7 @@ namespace Nop.Web.Factories
             this._specificationAttributeService = specificationAttributeService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._authorService = authorService;
             this._productService = productService;
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
@@ -998,6 +1001,42 @@ namespace Nop.Web.Factories
             return model;
         }
 
+
+        /// <summary>
+        /// Prepare the product author models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of author brief info model</returns>
+        protected virtual IList<AuthorBriefInfoModel> PrepareProductAuthorModels(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var authorsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_AUTHORS_MODEL_KEY,
+                     product.Id,
+                     _workContext.WorkingLanguage.Id,
+                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                     _storeContext.CurrentStore.Id);
+            var model = _cacheManager.Get(authorsCacheKey,
+                () => _authorService.GetProductAuthorsByProductId(product.Id, true)
+                    .Select(pm =>
+                    {
+                        var author = pm.Author;
+                        var modelMan = new AuthorBriefInfoModel
+                        {
+                            Id = author.Id,
+                            FirstName = author.FirstName,
+                            LastName = author.LastName,
+                            SeName = author.GetSeName()
+                        };
+                        return modelMan;
+                    })
+                    .ToList()
+                );
+
+            return model;
+        }
+
         /// <summary>
         /// Prepare the product details picture model
         /// </summary>
@@ -1335,6 +1374,7 @@ namespace Nop.Web.Factories
             if (!isAssociatedProduct)
             {
                 model.ProductManufacturers = PrepareProductManufacturerModels(product);
+                model.ProductAuthors = PrepareProductAuthorModels(product);
             }
 
             //rental products
